@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,11 +31,24 @@
     </div>
     <nav class="sidebar-nav">
         <a href="../index.html#about" onclick="closeSidebar()">About</a>
+        <a href="../index.html#news" onclick="closeSidebar()">News</a>
         <a href="../index.html#experience" onclick="closeSidebar()">Experience</a>
+        <div class="sidebar-nav-group open">
+            <button class="sidebar-nav-parent" onclick="this.parentElement.classList.toggle('open')">
+                Projects
+                <svg class="sidebar-nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="sidebar-nav-children">
+                <a href="computational-aeroacoustics.html" onclick="closeSidebar()">Computational Aeroacoustics</a>
+                <a href="wind-energy-systems.html" onclick="closeSidebar()">Wind Energy Systems</a>
+                <a href="lighter-than-air-systems.html" onclick="closeSidebar()">Lighter-than-Air Systems</a>
+            </div>
+        </div>
         <a href="../index.html#publications" onclick="closeSidebar()">Publications</a>
         <a href="../index.html#thesis" onclick="closeSidebar()">Thesis</a>
         <a href="../index.html#education" onclick="closeSidebar()">Education</a>
         <a href="../index.html#skills" onclick="closeSidebar()">Skills</a>
+        <a href="../index.html#chat" onclick="closeSidebar()">Ask Me Anything</a>
         <a href="../index.html#contact" onclick="closeSidebar()">Contact</a>
     </nav>
     <div class="sidebar-links">
@@ -54,9 +68,14 @@
     </div>
 
     <div class="project-card">
-        <div class="placeholder-img">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            Add project image or GIF here
+        <div class="img-carousel" onclick="toggleCarousel(this)">
+            <img src="../assets/img/turb_aerostat_pic.png" alt="Turbine aerostat concept" class="active" loading="lazy">
+            <img src="../assets/img/turb_aerostat_ring.png" alt="Turbine aerostat ring configuration" loading="lazy">
+            <span class="img-carousel-hint">Click to toggle</span>
+            <div class="img-carousel-indicator">
+                <span class="img-carousel-dot active"></span>
+                <span class="img-carousel-dot"></span>
+            </div>
         </div>
         <div class="project-card-body">
             <h3>Turbine Aerostat for Electric Power Generation</h3>
@@ -84,9 +103,14 @@
     </div>
 
     <div class="project-card">
-        <div class="placeholder-img">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            Add project image or GIF here
+        <div class="img-carousel" onclick="toggleCarousel(this)">
+            <img src="../assets/img/agri_geometry.png" alt="Agricultural airship geometry" class="active" loading="lazy">
+            <img src="../assets/img/agri_workflow.png" alt="Agricultural airship design workflow" loading="lazy">
+            <span class="img-carousel-hint">Click to toggle</span>
+            <div class="img-carousel-indicator">
+                <span class="img-carousel-dot active"></span>
+                <span class="img-carousel-dot"></span>
+            </div>
         </div>
         <div class="project-card-body">
             <h3>Solar-Powered Winged Hybrid Airship for Agriculture</h3>
