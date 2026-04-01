@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,14 +33,14 @@
         <a href="../index.html#news" onclick="closeSidebar()">News</a>
         <a href="../index.html#experience" onclick="closeSidebar()">Experience</a>
         <div class="sidebar-nav-group open">
-            <button class="sidebar-nav-parent" onclick="this.parentElement.classList.toggle('open')">
+            <a class="sidebar-nav-toggle" onclick="this.parentElement.classList.toggle('open')">
                 Projects
-                <svg class="sidebar-nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
             <div class="sidebar-nav-children">
-                <a href="computational-aeroacoustics.html" onclick="closeSidebar()">Computational Aeroacoustics</a>
-                <a href="wind-energy-systems.html" onclick="closeSidebar()">Wind Energy Systems</a>
-                <a href="lighter-than-air-systems.html" onclick="closeSidebar()">Lighter-than-Air Systems</a>
+                <a href="computational-aeroacoustics.html">Computational Aeroacoustics</a>
+                <a href="wind-energy-systems.html">Wind Energy Systems</a>
+                <a href="lighter-than-air-systems.html">Lighter-than-Air Systems</a>
             </div>
         </div>
         <a href="../index.html#publications" onclick="closeSidebar()">Publications</a>
@@ -135,6 +134,22 @@
 <script>
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+
+function toggleCarousel(el) {
+    var imgs = el.querySelectorAll('img');
+    var dots = el.querySelectorAll('.img-carousel-dot');
+    var cur = -1;
+    for (var i = 0; i < imgs.length; i++) {
+        if (imgs[i].classList.contains('active')) { cur = i; break; }
+    }
+    var nxt = (cur + 1) % imgs.length;
+    for (var i = 0; i < imgs.length; i++) {
+        imgs[i].classList.remove('active');
+        dots[i].classList.remove('active');
+    }
+    imgs[nxt].classList.add('active');
+    dots[nxt].classList.add('active');
+}
 </script>
 </body>
 </html>
