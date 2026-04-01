@@ -20,7 +20,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="112" height="112">
+        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="96" height="96">
         <div class="sidebar-name">Rithik R Nambiar</div>
         <div class="sidebar-title">MS Candidate · Aerospace Engineering<br>Iowa State University</div>
         <a href="../assets/pdf/Rithik_Resume.pdf" target="_blank" rel="noopener" class="sidebar-resume">
@@ -30,18 +30,26 @@
     </div>
     <nav class="sidebar-nav">
         <a href="../index.html#about" onclick="closeSidebar()">About</a>
+        <a href="../index.html#news" onclick="closeSidebar()">News</a>
         <a href="../index.html#experience" onclick="closeSidebar()">Experience</a>
+        <div class="sidebar-nav-group open">
+            <a class="sidebar-nav-toggle" onclick="this.parentElement.classList.toggle('open')">
+                Projects
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="sidebar-nav-children">
+                <a href="computational-aeroacoustics.html">Computational Aeroacoustics</a>
+                <a href="wind-energy-systems.html">Wind Energy Systems</a>
+                <a href="lighter-than-air-systems.html">Lighter-than-Air Systems</a>
+            </div>
+        </div>
         <a href="../index.html#publications" onclick="closeSidebar()">Publications</a>
         <a href="../index.html#thesis" onclick="closeSidebar()">Thesis</a>
         <a href="../index.html#education" onclick="closeSidebar()">Education</a>
         <a href="../index.html#skills" onclick="closeSidebar()">Skills</a>
+        <a href="../index.html#chat" onclick="closeSidebar()">Ask Me Anything</a>
         <a href="../index.html#contact" onclick="closeSidebar()">Contact</a>
     </nav>
-    <div class="sidebar-links">
-        <a href="https://www.linkedin.com/in/rithik-r-nambiar/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://scholar.google.com/citations?user=RLRSFkAAAAAJ&hl=en" target="_blank" rel="noopener">Scholar</a>
-        <a href="https://www.researchgate.net/scientific-contributions/Rithik-R-Nambiar-2253309485" target="_blank" rel="noopener">ResearchGate</a>
-    </div>
 </aside>
 
 <div class="main">
