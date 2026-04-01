@@ -62,7 +62,7 @@ img {
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
 .sidebar-header {
-    padding: 2.25rem 1.75rem 1.75rem;
+    padding: 2.8rem 1.75rem 1.75rem;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     text-align: center;
 }
