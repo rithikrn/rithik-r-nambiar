@@ -20,7 +20,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="96" height="96">
+        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="110" height="110">
         <div class="sidebar-name">Rithik R Nambiar</div>
         <div class="sidebar-title">MS Candidate · Aerospace Engineering<br>Iowa State University</div>
         <a href="../assets/pdf/Rithik_Resume.pdf" target="_blank" rel="noopener" class="sidebar-resume">
@@ -53,13 +53,13 @@
         <p>Research in predicting and optimizing aerodynamic noise — from supersonic jet screech tones to the aeroacoustic design of ultrasonic devices. This work combines CFD, CAA, and multidisciplinary optimization to understand and control noise generation in aerospace systems.</p>
     </div>
 
-    <!-- Project 1: Aeroacoustic Optimization -->
+    <!-- ═══ Project 1: Whistle Optimization ═══ -->
     <div class="project-card">
-        <!-- TO ADD YOUR IMAGE: Replace the placeholder-img div below with:
-             <div class="project-img-wrap"><img src="../assets/img/YOUR-IMAGE.png" alt="Aeroacoustic whistle optimization" loading="lazy"></div> -->
-        <div class="placeholder-img">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            Add project image or GIF here
+        <div class="img-gallery" onclick="toggleGallery(this)" title="Click to see next image">
+            <img src="../assets/img/whistle_cont.png" alt="Whistle contour plot" loading="lazy">
+            <img src="../assets/img/whistle_psd.png" alt="Whistle PSD analysis" loading="lazy" class="hidden">
+            <span class="img-gallery-counter">1 / 2</span>
+            <span class="img-gallery-hint">Click for next</span>
         </div>
         <div class="project-card-body">
             <h3>Aeroacoustic Optimization of Aerodynamic Whistles for Ultrasound Generation</h3>
@@ -77,13 +77,13 @@
         </div>
     </div>
 
-    <!-- Project 2: Jet Screech Tones -->
+    <!-- ═══ Project 2: Jet Screech Tones ═══ -->
     <div class="project-card">
-        <!-- TO ADD YOUR IMAGE: Replace the placeholder-img div below with:
-             <div class="project-img-wrap"><img src="../assets/img/YOUR-IMAGE.png" alt="Jet screech simulation" loading="lazy"></div> -->
-        <div class="placeholder-img">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            Add project image or GIF here
+        <div class="img-gallery" onclick="toggleGallery(this)" title="Click to see next image">
+            <img src="../assets/img/screechtones.png" alt="Screech tone visualization" loading="lazy">
+            <img src="../assets/img/spectralplot.png" alt="Spectral analysis plot" loading="lazy" class="hidden">
+            <span class="img-gallery-counter">1 / 2</span>
+            <span class="img-gallery-hint">Click for next</span>
         </div>
         <div class="project-card-body">
             <h3>Numerical Prediction of Jet Screech Tones in Supersonic Flows</h3>
@@ -115,9 +115,35 @@
     <div class="footer">&copy; 2026 Rithik R Nambiar · Ames, Iowa</div>
 </div>
 </div>
+
 <script>
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+
+function toggleGallery(gallery) {
+    var imgs = gallery.querySelectorAll('img');
+    var counter = gallery.querySelector('.img-gallery-counter');
+    if (imgs.length < 2) return;
+
+    // Find the currently visible image
+    var currentIndex = -1;
+    for (var i = 0; i < imgs.length; i++) {
+        if (!imgs[i].classList.contains('hidden')) {
+            currentIndex = i;
+            break;
+        }
+    }
+
+    // Hide current, show next
+    var nextIndex = (currentIndex + 1) % imgs.length;
+    imgs[currentIndex].classList.add('hidden');
+    imgs[nextIndex].classList.remove('hidden');
+
+    // Update counter
+    if (counter) {
+        counter.textContent = (nextIndex + 1) + ' / ' + imgs.length;
+    }
+}
 </script>
 </body>
 </html>
