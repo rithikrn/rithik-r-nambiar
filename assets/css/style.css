@@ -774,3 +774,106 @@ section:last-child { margin-bottom: 2rem; }
 }
 
 .back-link:hover { gap: 0.65rem; }
+
+/* ─── SIDEBAR DROPDOWN ─── */
+.sidebar-nav-group { margin: 0; }
+
+.sidebar-nav-group > .sidebar-nav-parent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    font-family: var(--sans);
+    text-align: left;
+}
+
+.sidebar-nav-group > .sidebar-nav-parent::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--sidebar-text);
+    opacity: 0.4;
+    transition: all 0.25s;
+    flex-shrink: 0;
+    margin-right: 0.65rem;
+}
+
+.sidebar-nav-group > .sidebar-nav-parent:hover,
+.sidebar-nav-group.open > .sidebar-nav-parent {
+    color: var(--sidebar-accent);
+}
+
+.sidebar-nav-group > .sidebar-nav-parent:hover::before,
+.sidebar-nav-group.open > .sidebar-nav-parent::before {
+    background: var(--accent);
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.sidebar-nav-chevron {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+    opacity: 0.5;
+}
+
+.sidebar-nav-group.open .sidebar-nav-chevron {
+    transform: rotate(180deg);
+    opacity: 0.8;
+}
+
+.sidebar-nav-children {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding-left: 1.35rem;
+}
+
+.sidebar-nav-group.open .sidebar-nav-children {
+    max-height: 200px;
+}
+
+.sidebar-nav-children a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+    opacity: 0.85;
+}
+
+.sidebar-nav-children a::before {
+    content: '›';
+    font-size: 0.9rem;
+    color: var(--sidebar-text);
+    opacity: 0.4;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    width: 10px;
+}
+
+.sidebar-nav-children a:hover {
+    color: var(--sidebar-accent);
+    opacity: 1;
+}
+
+.sidebar-nav-children a:hover::before {
+    color: var(--accent);
+    opacity: 1;
+}
