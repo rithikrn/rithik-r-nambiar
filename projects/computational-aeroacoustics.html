@@ -20,7 +20,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="110" height="110">
+        <img src="../assets/img/profile.png" alt="Rithik R Nambiar" class="sidebar-photo" width="112" height="112">
         <div class="sidebar-name">Rithik R Nambiar</div>
         <div class="sidebar-title">MS Candidate · Aerospace Engineering<br>Iowa State University</div>
         <a href="../assets/pdf/Rithik_Resume.pdf" target="_blank" rel="noopener" class="sidebar-resume">
@@ -53,13 +53,16 @@
         <p>Research in predicting and optimizing aerodynamic noise — from supersonic jet screech tones to the aeroacoustic design of ultrasonic devices. This work combines CFD, CAA, and multidisciplinary optimization to understand and control noise generation in aerospace systems.</p>
     </div>
 
-    <!-- ═══ Project 1: Whistle Optimization ═══ -->
+    <!-- ── Project 1: Whistle Optimization ── -->
     <div class="project-card">
-        <div class="img-gallery" onclick="toggleGallery(this)" title="Click to see next image">
-            <img src="../assets/img/whistle_cont.png" alt="Whistle contour plot" loading="lazy">
-            <img src="../assets/img/whistle_psd.png" alt="Whistle PSD analysis" loading="lazy" class="hidden">
-            <span class="img-gallery-counter">1 / 2</span>
-            <span class="img-gallery-hint">Click for next</span>
+        <div class="img-carousel" onclick="toggleCarousel(this)">
+            <img src="../assets/img/whistle_cont.png" alt="Whistle contour plot" class="active" loading="lazy">
+            <img src="../assets/img/whistle_psd.png" alt="Whistle PSD analysis" loading="lazy">
+            <span class="img-carousel-hint">Click to toggle</span>
+            <div class="img-carousel-indicator">
+                <span class="img-carousel-dot active"></span>
+                <span class="img-carousel-dot"></span>
+            </div>
         </div>
         <div class="project-card-body">
             <h3>Aeroacoustic Optimization of Aerodynamic Whistles for Ultrasound Generation</h3>
@@ -77,13 +80,16 @@
         </div>
     </div>
 
-    <!-- ═══ Project 2: Jet Screech Tones ═══ -->
+    <!-- ── Project 2: Jet Screech Tones ── -->
     <div class="project-card">
-        <div class="img-gallery" onclick="toggleGallery(this)" title="Click to see next image">
-            <img src="../assets/img/screechtones.png" alt="Screech tone visualization" loading="lazy">
-            <img src="../assets/img/spectralplot.png" alt="Spectral analysis plot" loading="lazy" class="hidden">
-            <span class="img-gallery-counter">1 / 2</span>
-            <span class="img-gallery-hint">Click for next</span>
+        <div class="img-carousel" onclick="toggleCarousel(this)">
+            <img src="../assets/img/screechtones.png" alt="Screech tone visualization" class="active" loading="lazy">
+            <img src="../assets/img/spectralplot.png" alt="Spectral analysis plot" loading="lazy">
+            <span class="img-carousel-hint">Click to toggle</span>
+            <div class="img-carousel-indicator">
+                <span class="img-carousel-dot active"></span>
+                <span class="img-carousel-dot"></span>
+            </div>
         </div>
         <div class="project-card-body">
             <h3>Numerical Prediction of Jet Screech Tones in Supersonic Flows</h3>
@@ -120,29 +126,27 @@
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
 
-function toggleGallery(gallery) {
-    var imgs = gallery.querySelectorAll('img');
-    var counter = gallery.querySelector('.img-gallery-counter');
-    if (imgs.length < 2) return;
-
-    // Find the currently visible image
+function toggleCarousel(el) {
+    var imgs = el.querySelectorAll('img');
+    var dots = el.querySelectorAll('.img-carousel-dot');
     var currentIndex = -1;
+
     for (var i = 0; i < imgs.length; i++) {
-        if (!imgs[i].classList.contains('hidden')) {
+        if (imgs[i].classList.contains('active')) {
             currentIndex = i;
             break;
         }
     }
 
-    // Hide current, show next
     var nextIndex = (currentIndex + 1) % imgs.length;
-    imgs[currentIndex].classList.add('hidden');
-    imgs[nextIndex].classList.remove('hidden');
 
-    // Update counter
-    if (counter) {
-        counter.textContent = (nextIndex + 1) + ' / ' + imgs.length;
+    for (var i = 0; i < imgs.length; i++) {
+        imgs[i].classList.remove('active');
+        dots[i].classList.remove('active');
     }
+
+    imgs[nextIndex].classList.add('active');
+    dots[nextIndex].classList.add('active');
 }
 </script>
 </body>
