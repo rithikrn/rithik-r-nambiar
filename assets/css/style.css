@@ -512,24 +512,6 @@ section:last-child { margin-bottom: 2rem; }
     border: 1px solid var(--border);
 }
 
-/* ─── CERTIFICATIONS ─── */
-.cert-list { list-style: none; }
-
-.cert-list li {
-    padding: 0.55rem 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.95rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.cert-list li:last-child { border-bottom: none; }
-.cert-name { color: var(--text); }
-.cert-provider { font-family: var(--mono); font-size: 0.76rem; color: var(--text-muted); }
-
 /* ─── CHAT ─── */
 .chat-widget {
     background: var(--card-bg);
