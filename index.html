@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +37,17 @@
         <a href="#about" class="active" onclick="closeSidebar()">About</a>
         <a href="#news" onclick="closeSidebar()">News</a>
         <a href="#experience" onclick="closeSidebar()">Experience</a>
+        <div class="sidebar-nav-group open">
+            <button class="sidebar-nav-parent" onclick="this.parentElement.classList.toggle('open')">
+                Projects
+                <svg class="sidebar-nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="sidebar-nav-children">
+                <a href="projects/computational-aeroacoustics.html" onclick="closeSidebar()">Computational Aeroacoustics</a>
+                <a href="projects/wind-energy-systems.html" onclick="closeSidebar()">Wind Energy Systems</a>
+                <a href="projects/lighter-than-air-systems.html" onclick="closeSidebar()">Lighter-than-Air Systems</a>
+            </div>
+        </div>
         <a href="#publications" onclick="closeSidebar()">Publications</a>
         <a href="#thesis" onclick="closeSidebar()">Thesis</a>
         <a href="#education" onclick="closeSidebar()">Education</a>
@@ -401,36 +413,123 @@ function toggleSidebar(){document.getElementById('sidebar').classList.toggle('op
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
 
 const sections=document.querySelectorAll('section[id],.hero');
-const navLinks=document.querySelectorAll('.sidebar-nav a');
+const navLinks=document.querySelectorAll('.sidebar-nav > a');
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const id=e.target.id||'about';navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}})},{rootMargin:'-20% 0px -60% 0px'});
 sections.forEach(s=>observer.observe(s));
 
 const chatInput=document.getElementById('chatInput'),chatSend=document.getElementById('chatSend'),chatMessages=document.getElementById('chatMessages');
 const kb={
-education:"Rithik is pursuing an MS in Aerospace Engineering (with thesis) at Iowa State University, expected Aug 2026. He completed his BTech in Aeronautical Engineering from Manipal Institute of Technology (2018–2022) with a Minor in Fundamentals of Computing and was recognized for outstanding thesis work.",
-experience:"Rithik has held several research roles: Graduate Research & Teaching Assistant at Iowa State (current), Research Assistant at ISU Computational Aerodynamics Lab (Sep 2024–Jan 2025), Project Research Assistant at IIT Bombay (Sep 2022–Jun 2024), Research Intern at IIST (Jan–Jul 2022), and Design Intern at HAL (Aug–Sep 2021).",
-research:"His research spans three main areas: (1) Computational Aeroacoustics — jet screech tone prediction, aeroacoustic optimization; (2) Offshore Wind Systems — WAFOWT dynamic modeling, bat deterrent devices; (3) Lighter-than-Air Systems — aerostat feasibility studies, turbine optimization. Visit the project pages for details!",
-publications:"Rithik has 7 publications including 2 journal papers and 5 conference proceedings, mostly at AIAA forums and in CFD/aerospace journals. See the Publications section for the full list with DOIs and PDFs.",
-skills:"Core expertise: CFD (ANSYS Fluent, OpenFOAM, CFD++), CAA, MDO (DAFoam), dynamic modeling (MATLAB/Simulink), CAD (CATIA v5, Fusion 360, AutoCAD), and programming (Python, MATLAB, LaTeX). Fluent in English, Hindi, and Malayalam.",
-contact:"Email: rithiknambiar2000@gmail.com. Also on LinkedIn, Google Scholar, and ResearchGate. See the Contact section for direct links.",
-wafowt:"The WAFOWT project involves dynamic modeling of a Wave-Augmented Floating Offshore Wind Turbine using MATLAB/Simulink and WEC-Sim to evaluate wave-body interactions and enhance platform stability.",
-bat:"The bat deterrent project designed ultrasonic devices using aerodynamic whistles to reduce wind turbine bat mortality. Used CFD, CAA, and MDO with DAFoam for optimization.",
-aerostat:"At IIT Bombay, Rithik led feasibility studies on solar/wind aerostats for power generation, achieving 20% cost reduction and 15% efficiency improvement through CFD analysis.",
-iitb:"At IIT Bombay's LTA Systems Lab (2022–2024), Rithik worked on aerostat research, led feasibility studies, optimized turbine designs, built a design dashboard, organized eTAE-2023 seminar, and served as TA."
+// ─── Core Info ───
+about:"Rithik R Nambiar is an MS candidate in Aerospace Engineering (with thesis) at Iowa State University, specializing in computational analysis and sustainable system design. His research spans computational aeroacoustics, wind energy systems, and lighter-than-air systems. He's passionate about translating complex engineering challenges into sustainable solutions.",
+education:"Rithik is pursuing an MS in Aerospace Engineering (with thesis) at Iowa State University (Aug 2024 – present). Previously, he completed his BTech in Aeronautical Engineering from Manipal Institute of Technology (2018–2022) with a Minor in Fundamentals of Computing. He was recognized for outstanding thesis work in his batch.",
+gpa:"Rithik's academic details are available on his resume. You can download it from the sidebar Resume button.",
+manipal:"Manipal Institute of Technology (MIT Manipal) is where Rithik completed his BTech in Aeronautical Engineering (2018–2022). His coursework covered aerodynamics, aircraft structures, flight mechanics, propulsion, and avionics. He also earned a Minor in Fundamentals of Computing.",
+isu:"Iowa State University is where Rithik is currently pursuing his MS in Aerospace Engineering with a thesis focus. He works as a Graduate Research & Teaching Assistant in the Department of Aerospace Engineering.",
+
+// ─── Experience ───
+experience:"Rithik has held several research and industry roles:\n• Graduate Research & Teaching Assistant — Iowa State University (May 2025–Present)\n• Research Assistant — ISU Computational Aerodynamics & Aeroacoustics Lab (Sep 2024–Jan 2025)\n• Project Research Assistant — LTA Systems Lab, IIT Bombay (Sep 2022–Jun 2024)\n• Research Intern (BTech Thesis) — IIST Trivandrum (Jan–Jul 2022)\n• Design Intern — Hindustan Aeronautics Limited, Bangalore (Aug–Sep 2021)",
+teaching:"Rithik has served as a Teaching Assistant twice: (1) AERE 3220: Aerospace Structures Laboratory at Iowa State, guiding 30+ students; (2) AE664: LTA Systems at IIT Bombay, where he earned positive feedback for exceptional teaching support.",
+hal:"At Hindustan Aeronautics Limited (HAL) in Bangalore, Rithik worked as a Design Intern (Aug–Sep 2021) in the Wing & Empennage division. He performed design and analysis of critical aircraft components and conducted a study on gurney flaps that achieved a 15% improvement in lift coefficient.",
+iist:"At the Indian Institute of Space Science and Technology (IIST) in Trivandrum, Rithik conducted his bachelor's thesis research (Jan–Jul 2022). He used ANSYS Fluent to investigate screech tones in supersonic jets, evaluating sound pressure levels across various microphone locations and exploring the impact of Mach numbers on noise generation.",
+
+// ─── Research Areas ───
+research:"Rithik's research spans three main areas:\n1. Computational Aeroacoustics — jet screech tone prediction, aeroacoustic optimization of ultrasonic devices\n2. Wind Energy Systems — WAFOWT dynamic modeling, VAWT optimization, bat deterrent devices\n3. Lighter-than-Air Systems — turbine aerostat feasibility, solar-powered hybrid airships\nClick the project links in the sidebar to explore each area in detail!",
+aeroacoustics:"Rithik's computational aeroacoustics research includes: (1) Aeroacoustic optimization of aerodynamic whistles for ultrasound generation using CFD, CAA, and MDO with DAFoam; (2) Numerical prediction of jet screech tones in supersonic flows using ANSYS Fluent, studying axisymmetric mode screech at various Mach numbers.",
+wind:"Rithik's wind energy research includes: (1) The WAFOWT project — dynamic modeling of a Wave-Augmented Floating Offshore Wind Turbine using MATLAB/Simulink and WEC-Sim; (2) VAWT performance optimization — CFD analysis of two-bladed vertical axis wind turbines studying overlap effects; (3) An ultrasonic bat deterrent device to reduce wind turbine wildlife mortality.",
+lta:"Rithik's lighter-than-air systems research at IIT Bombay includes: (1) Turbine Aerostat — feasibility study on solar/wind aerostats for transmission towers, achieving 20% cost reduction and 15% efficiency improvement; (2) Solar-Powered Hybrid Airship — conceptual design of a winged airship for agricultural applications like crop monitoring and spraying.",
+
+// ─── Specific Projects ───
+wafowt:"The WAFOWT (Wave-Augmented Floating Offshore Wind Turbine) project involves dynamic modeling and time-domain simulations using MATLAB/Simulink and WEC-Sim. Rithik evaluates wave-body interactions and enhances platform stability by coupling wind turbine dynamics with wave energy converter behavior. His thesis is titled 'Modeling and Analysis of an OWC Integrated Floating Offshore Wind Turbine Platform.'",
+thesis_ms:"Rithik's MS thesis is titled 'Modeling and Analysis of an OWC Integrated Floating Offshore Wind Turbine Platform.' He is defending it in April 2026. The research uses MATLAB/Simulink and WEC-Sim for dynamic modeling of the WAFOWT system.",
+bat:"The bat deterrent project at ISU designed novel ultrasonic devices using aerodynamic whistles to mitigate wind turbine bat mortality. Rithik conducted CFD and CAA simulations to understand whistle performance, then applied Multidisciplinary Design Optimization (MDO) using the Discrete Adjoint approach with OpenFOAM (DAFoam).",
+vawt:"The VAWT project investigated the effect of horizontal and vertical overlap on two-bladed Vertical Axis Wind Turbines. CFD analysis was used to optimize turbine placement and performance in wind farm configurations. Published at AIAA AVIATION 2023.",
+aerostat:"At IIT Bombay, Rithik led feasibility studies on solar/wind aerostats for transmission towers, achieving 20% cost reduction and 15% power generation efficiency improvement through CFD analysis. He also developed a dashboard that reduced the aerostat design cycle time by 60%.",
+airship:"The solar-powered hybrid airship project developed a conceptual design integrating photovoltaic energy harvesting with a lifting-body configuration for long-endurance agricultural operations — crop monitoring, spraying, and precision agriculture in remote regions.",
+iitb:"At IIT Bombay's LTA Systems Laboratory (2022–2024), Rithik worked under Prof. R.S. Pant. He led aerostat feasibility studies, optimized turbine designs via CFD, built a design dashboard, organized the eTAE-2023 national seminar, guided interns, and served as TA for AE664: LTA Systems.",
+screech:"Rithik's screech tone research used ANSYS Fluent to numerically predict axisymmetric mode jet screech tones in supersonic flows. The work explored multiple Mach numbers and microphone locations. It was published both at AIAA AVIATION 2023 and in CFD Letters (2025).",
+
+// ─── Publications ───
+publications:"Rithik has 6 publications — 2 journal papers and 4 conference proceedings:\n• J: CFD Letters 2025 — Jet screech tones in supersonic flows\n• J: JAST 2024 — Turbine aerostat conceptual sizing\n• C: AIAA 2023 — VAWT overlap performance\n• C: AIAA 2023 — Turbine aerostat sizing methodology\n• C: AIAA 2023 — Jet screech tones at different Mach numbers\n• C: AIAA 2023 — Solar-powered hybrid airship\nAll have DOI links and downloadable PDFs in the Publications section.",
+journal:"Rithik has 2 journal publications: (1) 'Numerical Prediction of Axisymmetric Jet Screech Tones in Supersonic Flows' in CFD Letters, 2025; (2) 'Conceptual Sizing Approach for Electric Power Generation Turbine Aerostat' in JAST, 2024.",
+aiaa:"Rithik presented 4 papers at AIAA AVIATION 2023 Forum in San Diego covering VAWT overlap effects, turbine aerostat sizing, jet screech tones, and a solar-powered hybrid airship design.",
+
+// ─── Skills & Tools ───
+skills:"Rithik's technical skills include:\n• CFD/CAA: ANSYS Fluent, OpenFOAM, CFD++, DAFoam\n• Dynamic modeling: MATLAB, Simulink, WEC-Sim\n• CAD: CATIA v5, Autodesk Fusion 360, AutoCAD\n• Programming: Python, MATLAB, LaTeX\n• Tools: Microsoft Office, Google Workspace\n• Soft skills: Team leadership, cross-functional collaboration, research coordination",
+cfd:"Rithik has extensive CFD experience using ANSYS Fluent, OpenFOAM, CFD++, and DAFoam (Discrete Adjoint with OpenFOAM). He has applied CFD to jet acoustics, wind turbine analysis, aerostat optimization, and aerodynamic whistle design.",
+matlab:"Rithik uses MATLAB and Simulink extensively for dynamic modeling, particularly for the WAFOWT project with WEC-Sim. He also uses MATLAB for data analysis and numerical computations.",
+openfoam:"Rithik uses OpenFOAM for CFD simulations and DAFoam (Discrete Adjoint with OpenFOAM) for multidisciplinary design optimization, particularly in the aeroacoustic whistle project.",
+languages:"Rithik is fluent in English, Hindi, and Malayalam.",
+certifications:"Rithik holds certifications in: ANSYS Fluent simulation (Udemy), Aircraft Design using CATIA V5 (Upskillz), Python with Space Applications (Spaceonova), Python for Everybody specialization (Coursera/UMich), and Autodesk CAD & Digital Manufacturing (Coursera). He also organized the eTAE-2023 national seminar at IIT Bombay.",
+
+// ─── Contact & Personal ───
+contact:"You can reach Rithik at:\n• Email: rithiknambiar2000@gmail.com\n• LinkedIn: linkedin.com/in/rithik-r-nambiar\n• Google Scholar & ResearchGate links are in the Contact section below.\nHe's open to research collaborations and industry opportunities!",
+resume:"You can download Rithik's resume by clicking the 'Resume' button in the sidebar on the left. It opens as a PDF.",
+location:"Rithik is based in Ames, Iowa, USA — home of Iowa State University.",
+interests:"Rithik is passionate about translating complex engineering challenges into sustainable solutions that advance both technology and environmental stewardship. His work bridges aerodynamics, acoustics, and renewable energy.",
+collaborate:"Rithik is open to research collaborations and industry opportunities in aerospace, renewable energy, and computational engineering. Reach out via email at rithiknambiar2000@gmail.com or connect on LinkedIn!"
 };
-function getResponse(input){const q=input.toLowerCase();
-if(q.match(/education|study|degree|university|college|btech|ms|master|manipal|iowa/))return kb.education;
-if(q.match(/experience|work|job|internship|role|career/))return kb.experience;
-if(q.match(/research|project|area|topic/))return kb.research;
-if(q.match(/wafowt|offshore|wave|floating|wind turbine/))return kb.wafowt;
-if(q.match(/bat|deterrent|ultrasonic|whistle/))return kb.bat;
-if(q.match(/aerostat|lta|lighter|airship/))return kb.aerostat;
-if(q.match(/iit|bombay|pant/))return kb.iitb;
-if(q.match(/publication|paper|journal|conference|aiaa|screech/))return kb.publications;
-if(q.match(/skill|tool|software|program|python|matlab|fluent|openfoam|catia|cfd/))return kb.skills;
-if(q.match(/contact|email|reach|hire|connect|linkedin/))return kb.contact;
-if(q.match(/hi|hello|hey|greet/))return"Hello! Ask me about Rithik's education, research, publications, skills, or experience.";
-return"I don't have specific info on that, but you can reach Rithik at rithikrn@iastate.edu or browse the sections above.";}
+
+function getResponse(input){const q=input.toLowerCase().trim();
+
+// Greetings
+if(q.match(/^(hi|hello|hey|greet|howdy|sup|yo|good\s?(morning|afternoon|evening))$/))return"Hello! I'm an AI assistant for Rithik's portfolio. I can tell you about his education, research projects, publications, skills, work experience, and more. What are you curious about?";
+if(q.match(/who are you|what (are|can) you/))return"I'm an AI assistant trained on Rithik R Nambiar's academic portfolio. I can answer questions about his education, research in aeroacoustics, wind energy, and LTA systems, his publications, technical skills, and work experience. Try asking something specific!";
+if(q.match(/who is rithik|tell me about (rithik|him|yourself)/))return kb.about;
+
+// Education
+if(q.match(/education|study|degree|university|college|academic|school/))return kb.education;
+if(q.match(/btech|bachelor|undergrad|manipal/))return kb.manipal;
+if(q.match(/master|ms |msc|grad(uate)?\s?school|iowa state|isu|ames/))return kb.isu;
+if(q.match(/gpa|grade|cgpa|score/))return kb.gpa;
+if(q.match(/thesis|defend|dissertation/))return q.match(/ms|master|current|grad/)? kb.thesis_ms : "Rithik has both a BTech thesis (jet screech tones at IIST, 2022) and an MS thesis (WAFOWT/OWC platform at Iowa State, 2026). Which one would you like to know about?";
+
+// Experience
+if(q.match(/experience|work|job|position|career|role|employ/))return kb.experience;
+if(q.match(/teach|ta |assistant.*class|students|aere|ae664/))return kb.teaching;
+if(q.match(/hal|hindustan|aeronautics|bangalore|intern(?!.*iist)/))return kb.hal;
+if(q.match(/iist|trivandrum|space science/))return kb.iist;
+if(q.match(/iit|bombay|mumbai|pant|lta\s?lab/))return kb.iitb;
+
+// Research areas
+if(q.match(/research|area|topic|focus|interest|what (do|does)|field/))return kb.research;
+if(q.match(/aeroacoustic|caa|noise|acoustic|sound/))return kb.aeroacoustics;
+if(q.match(/wind|energy|offshore|turbine|renewable/))return kb.wind;
+if(q.match(/lighter|lta|aerostat|airship|buoy/))return kb.lta;
+
+// Specific projects
+if(q.match(/wafowt|owc|floating|wave.*augment|platform.*stability/))return kb.wafowt;
+if(q.match(/bat|deterrent|ultrasonic|whistle|wildlife/))return kb.bat;
+if(q.match(/vawt|vertical.*axis|overlap/))return kb.vawt;
+if(q.match(/turb.*aerostat|power.*generat.*aerostat|transmission.*tower/))return kb.aerostat;
+if(q.match(/airship|solar.*power.*air|agri|crop|farm/))return kb.airship;
+if(q.match(/screech|jet.*noise|supersonic.*noise|mach.*number|axisymmetric/))return kb.screech;
+
+// Publications
+if(q.match(/publication|paper|publish|journal|conference|cite/))return kb.publications;
+if(q.match(/journal\b/))return kb.journal;
+if(q.match(/aiaa|aviation.*forum|san diego/))return kb.aiaa;
+
+// Skills
+if(q.match(/skill|tool|software|program|tech|expertise|proficien|capable/))return kb.skills;
+if(q.match(/cfd|fluent|simulation|comput.*fluid/))return kb.cfd;
+if(q.match(/matlab|simulink|wec-?sim/))return kb.matlab;
+if(q.match(/openfoam|dafoam|adjoint/))return kb.openfoam;
+if(q.match(/language|speak|fluent.*in|english|hindi|malayalam/))return kb.languages;
+if(q.match(/certif|course|training|udemy|coursera|catia|fusion/))return kb.certifications;
+
+// Contact & misc
+if(q.match(/contact|email|reach|connect|linkedin|mail|message/))return kb.contact;
+if(q.match(/resume|cv|download/))return kb.resume;
+if(q.match(/where|location|based|live|city/))return kb.location;
+if(q.match(/interest|passion|motivat|why|goal/))return kb.interests;
+if(q.match(/collaborat|opportunit|hire|recruit|open to|available/))return kb.collaborate;
+
+// Thank you / bye
+if(q.match(/thank|thanks|thx/))return"You're welcome! Feel free to ask anything else about Rithik's work.";
+if(q.match(/bye|goodbye|see you/))return"Goodbye! Feel free to come back anytime. You can also reach Rithik directly at rithiknambiar2000@gmail.com.";
+if(q.match(/help|what can i ask/))return"You can ask me about:\n• Education (ISU, Manipal)\n• Research areas (aeroacoustics, wind energy, LTA systems)\n• Specific projects (WAFOWT, bat deterrent, VAWT, aerostat, airship)\n• Publications & thesis\n• Technical skills & tools\n• Work experience (ISU, IIT Bombay, IIST, HAL)\n• Contact info & resume";
+
+return"I'm not sure about that specific topic, but I know a lot about Rithik's education, research projects, publications, skills, and experience. Try asking about one of those! Or type 'help' to see what I can answer.";}
 
 chatInput.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';chatSend.disabled=!this.value.trim()});
 chatInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(this.value.trim())sendMessage()}});
