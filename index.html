@@ -765,9 +765,8 @@ _reveals.forEach(s => _revObs.observe(s));
   const el = document.getElementById('typeText');
   if(!el) return;
 
-  // Edit freely. First line shows first (your latest). Add as many as you like.
   const LINES = [
-    "MS graduate · Iowa State",
+    "MS graduate · Iowa State University",
     "Project Research Assistant · IIT Bombay",
     "BTech graduate · MIT Manipal",
     "Just a curious human, mostly figuring it out",
@@ -775,7 +774,7 @@ _reveals.forEach(s => _revObs.observe(s));
   ];
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ el.textContent = LINES[0]; return; }   // no animation for reduced-motion
+  if(reduce){ el.textContent = LINES[0]; return; }   
 
   const TYPE = 55, ERASE = 28, HOLD = 1500, GAP = 350;  // ms — timing knobs
   let li = 0, ci = 0, deleting = false;
