@@ -760,6 +760,40 @@ const _revObs = new IntersectionObserver((entries) => {
 }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
 _reveals.forEach(s => _revObs.observe(s));
 
+/* ─── Hero typewriter ─── */
+(function(){
+  const el = document.getElementById('typeText');
+  if(!el) return;
+
+  // Edit freely. First line shows first (your latest). Add as many as you like.
+  const LINES = [
+    "MS graduate · Aerospace Engineering · Iowa State",
+    "Project Research Assistant · IIT Bombay",
+    "BTech graduate · Aeronautical Engineering · MIT Manipal",
+    "Mostly a curious human, figuring it out one simulation at a time",
+  ];
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ el.textContent = LINES[0]; return; }   // no animation for reduced-motion
+
+  const TYPE = 55, ERASE = 28, HOLD = 1500, GAP = 350;  // ms — timing knobs
+  let li = 0, ci = 0, deleting = false;
+
+  function tick(){
+    const line = LINES[li];
+    if(!deleting){
+      el.textContent = line.slice(0, ++ci);
+      if(ci === line.length){ deleting = true; return setTimeout(tick, HOLD); }
+      return setTimeout(tick, TYPE);
+    } else {
+      el.textContent = line.slice(0, --ci);
+      if(ci === 0){ deleting = false; li = (li + 1) % LINES.length; return setTimeout(tick, GAP); }
+      return setTimeout(tick, ERASE);
+    }
+  }
+  tick();
+})();
+    
 /* ─── Theme toggle ─── */
 (function(){
   const root = document.documentElement, btn = document.getElementById('themeToggle');
