@@ -61,9 +61,9 @@
     AMBIENT_DYE:          0.45,  // dye injected per second, per emitter
     AMBIENT_FORCE:        13000,
 
-    INTENSITY_DARK:       0.40,  // dark theme: sits well behind the text
+    INTENSITY_DARK:       0.60,  // dark theme: sits well behind the text
     INTENSITY_LIGHT:      0.55,  // pale paper swallows more, so it gets more
-    SATURATION_DARK:      0.80,  // pull chroma out on dark — reads as smoke
+    SATURATION_DARK:      0.70,  // pull chroma out on dark — reads as smoke
     SATURATION_LIGHT:     0.85
   };
 
