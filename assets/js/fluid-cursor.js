@@ -58,11 +58,13 @@
     // Always-on ambient circulation, so the field is alive before anyone
     // touches it. Set AMBIENT_DYE to 0 for a cursor-only background.
     AMBIENT_EMITTERS:     IS_MOBILE ? 2 : 3,
-    AMBIENT_DYE:          0.62,  // dye injected per second, per emitter
+    AMBIENT_DYE:          0.45,  // dye injected per second, per emitter
     AMBIENT_FORCE:        13000,
 
-    INTENSITY_DARK:       0.88,  // global alpha of the dye, dark theme
-    INTENSITY_LIGHT:      0.78   // light theme needs nearly as much to register
+    INTENSITY_DARK:       0.40,  // dark theme: sits well behind the text
+    INTENSITY_LIGHT:      0.55,  // pale paper swallows more, so it gets more
+    SATURATION_DARK:      0.60,  // pull chroma out on dark — reads as smoke
+    SATURATION_LIGHT:     0.85
   };
 
   /* ── WebGL context ───────────────────────────────────────────────────── */
@@ -335,7 +337,7 @@
   var displayShader = compileShader(gl.FRAGMENT_SHADER, [
     'precision highp float; precision highp sampler2D;',
     'varying vec2 vUv; uniform sampler2D uTexture;',
-    'uniform float uIntensity; uniform float uDeepen;',
+    'uniform float uIntensity; uniform float uDeepen; uniform float uSat;',
     'vec3 ramp (float t) {',
     '  vec3 c0 = vec3(0.071, 0.227, 0.478);',
     '  vec3 c1 = vec3(0.114, 0.498, 0.769);',
@@ -352,6 +354,8 @@
     '  float a = pow(smoothstep(0.012, 0.55, d), 0.85);',
     '  vec3 col = ramp(smoothstep(0.02, 0.9, d));',
     '  col = mix(col, col * 0.78, uDeepen);',   // light theme: deepen on paper
+    '  float lum = dot(col, vec3(0.299, 0.587, 0.114));',
+    '  col = mix(vec3(lum), col, uSat);',       // desaturate toward smoke
     '  gl_FragColor = vec4(col, a * uIntensity);',
     '}'
   ].join('\n'));
@@ -488,11 +492,12 @@
 
   /* ── colours, driven by the site's CSS variables ─────────────────────── */
 
-  var intensity = CONFIG.INTENSITY_DARK, deepen = 0.0;
+  var intensity = CONFIG.INTENSITY_DARK, deepen = 0.0, sat = CONFIG.SATURATION_DARK;
 
   function refreshColors() {
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     intensity = isDark ? CONFIG.INTENSITY_DARK : CONFIG.INTENSITY_LIGHT;
+    sat = isDark ? CONFIG.SATURATION_DARK : CONFIG.SATURATION_LIGHT;
     deepen = isDark ? 0.0 : 1.0;   // darken the ramp so it bites on pale paper
   }
   window.refreshFluidColors = refreshColors;
@@ -603,6 +608,7 @@
     gl.uniform1i(displayProgram.uniforms.uTexture, dye.read.attach(0));
     gl.uniform1f(displayProgram.uniforms.uIntensity, intensity);
     gl.uniform1f(displayProgram.uniforms.uDeepen, deepen);
+    gl.uniform1f(displayProgram.uniforms.uSat, sat);
     blit(null);
     gl.disable(gl.BLEND);
   }
