@@ -61,9 +61,9 @@
     AMBIENT_DYE:          0.45,  // dye injected per second, per emitter
     AMBIENT_FORCE:        13000,
 
-    INTENSITY_DARK:       0.60,  // dark theme: sits well behind the text
+    INTENSITY_DARK:       0.56,  // dark theme: present, still behind the text
     INTENSITY_LIGHT:      0.55,  // pale paper swallows more, so it gets more
-    SATURATION_DARK:      0.60,  // pull chroma out on dark — reads as smoke
+    SATURATION_DARK:      0.74,  // chroma pulled back, but the ramp still shows
     SATURATION_LIGHT:     0.85
   };
 
@@ -762,6 +762,22 @@
   }, { passive: true });
 
   /* ── boot ────────────────────────────────────────────────────────────── */
+
+  // The caption belongs to the hero, not to the whole page — once the reader
+  // scrolls it gets out of the way instead of sitting on top of the content.
+  var tag = document.querySelector('.fluid-tag');
+  if (tag) {
+    var tagHidden = false;
+    var onScroll = function () {
+      var past = (window.pageYOffset || document.documentElement.scrollTop) > 90;
+      if (past !== tagHidden) {
+        tagHidden = past;
+        tag.classList.toggle('is-hidden', past);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
 
   refreshColors();
   resizeCanvas();
