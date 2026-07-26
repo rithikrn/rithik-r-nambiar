@@ -15,10 +15,13 @@
     --card-bg: #FFFFFF;
     --tag-bg: #E8EDEF;
     --link: #1F6B87;
-    /* Three roles, three faces. --serif is the display face (a grotesque, not a
-       serif — the variable name is kept so no existing rule has to change),
-       --sans is the reading face, --mono carries dates and instrument labels. */
-    --serif: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    /* Three roles, three faces. --serif is the display face (a geometric sans,
+       not a serif — the variable name is kept so no existing rule has to
+       change), --sans is the reading face, --mono carries dates and labels.
+       Jost is a Futura-lineage geometric: the same 1920s-30s family tree as
+       Dwiggins' Metro. To move to the real thing, see FONT SWAP at the bottom
+       of this file. */
+    --serif: 'Jost', 'Futura', 'Century Gothic', sans-serif;
     --sans: 'Source Serif 4', Georgia, 'Times New Roman', serif;
     --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -1286,8 +1289,8 @@ section:last-child { margin-bottom: 2rem; }
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: radial-gradient(120% 100% at 50% 12%, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.84) 42%, #000 100%);
-            mask-image: radial-gradient(120% 100% at 50% 12%, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.84) 42%, #000 100%);
+    -webkit-mask-image: radial-gradient(120% 100% at 50% 12%, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.70) 42%, #000 100%);
+            mask-image: radial-gradient(120% 100% at 50% 12%, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.70) 42%, #000 100%);
 }
 .main { position: relative; z-index: 1; }
 
@@ -1310,7 +1313,7 @@ section:last-child { margin-bottom: 2rem; }
 @media (prefers-reduced-motion: reduce) { .fluid-tag { display: none; } }
 
 /* ════════ HERO TYPEWRITER ════════ */
-/* Terminal-style rotating subtitle. Pairs with the JetBrains Mono you already load.
+/* Terminal-style rotating subtitle. Pairs with the IBM Plex Mono loaded in the head.
    Bigger + higher-contrast than the old subtitle, readable in both themes.
    Line content and timing live in the JS block in index.html. */
 .hero-subtitle {
@@ -1349,55 +1352,55 @@ section:last-child { margin-bottom: 2rem; }
 }
 :root[data-theme="dark"] .skill-tag:hover { background: rgba(217, 113, 60, 0.13); }
 
-/* ════════ TYPE SCALE v2 (append-only — must stay last) ════════ */
-/* Everything moves up about one step. Body copy goes 17 -> 18.5px, headings get
-   a wider clamp range so big screens actually use their width, and the mobile
-   floor is raised so nothing lands under 16px on a phone. */
+/* ════════ TYPE SCALE v3 (append-only) ════════ */
+/* Dialled back roughly 8% from v2 across the board. Jost runs slightly wider
+   and lighter than a grotesque at the same nominal size, so the smaller
+   numbers still read comfortably. */
 
-body { font-size: 18.5px; line-height: 1.72; }
+body { font-size: 17.25px; line-height: 1.7; }
 
-.hero h1          { font-size: clamp(2.5rem, 1.7rem + 3.6vw, 4rem); line-height: 1.06; }
-.hero-subtitle    { font-size: clamp(1.1rem, 1rem + 0.7vw, 1.45rem); }
+.hero h1          { font-size: clamp(2.15rem, 1.55rem + 2.7vw, 3.3rem); line-height: 1.08; }
+.hero-subtitle    { font-size: clamp(1rem, 0.94rem + 0.45vw, 1.2rem); }
 .hero-about,
-.project-hero p   { font-size: clamp(1.08rem, 1.02rem + 0.35vw, 1.22rem); line-height: 1.78; }
-.section-title    { font-size: clamp(1.85rem, 1.45rem + 1.5vw, 2.5rem); }
-.project-hero h1  { font-size: clamp(2.1rem, 1.6rem + 2vw, 2.9rem); }
+.project-hero p   { font-size: clamp(1rem, 0.97rem + 0.22vw, 1.1rem); line-height: 1.76; }
+.section-title    { font-size: clamp(1.6rem, 1.35rem + 1vw, 2rem); }
+.project-hero h1  { font-size: clamp(1.85rem, 1.45rem + 1.6vw, 2.45rem); }
 
 .news-text,
 .exp-bullets li,
 .edu-note,
-.fn-caption-text  { font-size: clamp(1rem, 0.96rem + 0.25vw, 1.1rem); }
+.fn-caption-text  { font-size: clamp(0.95rem, 0.93rem + 0.14vw, 1.02rem); }
 .exp-role,
 .edu-school,
 .pub-title,
 .thesis-title,
-.award-title      { font-size: clamp(1.05rem, 1rem + 0.3vw, 1.18rem); }
+.award-title      { font-size: clamp(1rem, 0.97rem + 0.18vw, 1.08rem); }
 .exp-org,
 .edu-degree,
 .pub-authors,
 .pub-venue,
 .thesis-meta,
-.award-org        { font-size: clamp(0.95rem, 0.92rem + 0.2vw, 1.04rem); }
+.award-org        { font-size: clamp(0.9rem, 0.88rem + 0.12vw, 0.96rem); }
 .news-date,
 .exp-date,
 .edu-date,
-.award-date       { font-size: clamp(0.86rem, 0.84rem + 0.15vw, 0.95rem); }
-.skill-tag        { font-size: clamp(0.95rem, 0.92rem + 0.2vw, 1.04rem); padding: 0.38rem 0.85rem; }
-.skill-group h4   { font-size: 1.02rem; }
+.award-date       { font-size: clamp(0.8rem, 0.79rem + 0.09vw, 0.86rem); letter-spacing: 0.01em; }
+.skill-tag        { font-size: clamp(0.88rem, 0.86rem + 0.12vw, 0.95rem); padding: 0.32rem 0.78rem; }
+.skill-group h4   { font-size: 0.95rem; letter-spacing: 0.02em; }
 
-.sidebar-name     { font-size: clamp(1.3rem, 1.2rem + 0.4vw, 1.5rem); }
-.sidebar-title    { font-size: 0.92rem; }
-.sidebar-nav a    { font-size: 0.98rem; }
-.sidebar-resume   { font-size: 0.88rem; }
-.footer           { font-size: 0.92rem; }
+.sidebar-name     { font-size: clamp(1.2rem, 1.14rem + 0.28vw, 1.35rem); }
+.sidebar-title    { font-size: 0.85rem; }
+.sidebar-nav a    { font-size: 0.92rem; }
+.sidebar-resume   { font-size: 0.83rem; }
+.footer           { font-size: 0.86rem; }
 
 @media (max-width: 860px) {
-    body { font-size: 17.5px; }
-    .content { padding: 82px 1.35rem 3.5rem; }
-    .hero h1 { font-size: clamp(2.15rem, 1.5rem + 4.5vw, 2.9rem); }
-    .section-title { font-size: clamp(1.7rem, 1.3rem + 2.6vw, 2.1rem); }
-    .sidebar-name { font-size: 1.35rem; }
-    .news-date, .exp-date, .edu-date, .award-date { font-size: 0.9rem; }
+    body { font-size: 16.5px; }
+    .content { padding: 80px 1.3rem 3.25rem; }
+    .hero h1 { font-size: clamp(1.95rem, 1.4rem + 3.6vw, 2.5rem); }
+    .section-title { font-size: clamp(1.5rem, 1.2rem + 2vw, 1.85rem); }
+    .sidebar-name { font-size: 1.25rem; }
+    .news-date, .exp-date, .edu-date, .award-date { font-size: 0.83rem; }
 }
 
 /* ════════ RESEARCH PROJECT CARDS ════════ */
@@ -1425,18 +1428,18 @@ body { font-size: 18.5px; line-height: 1.72; }
 }
 :root[data-theme="dark"] .work-card:hover { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38); }
 .work-tools {
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     letter-spacing: 0.03em;
     color: var(--text-muted);
     line-height: 1.5;
 }
-.work-card h3 { font-size: 1.18rem; line-height: 1.3; color: var(--heading); }
-.work-card p { font-size: 0.98rem; line-height: 1.65; color: var(--text-muted); flex: 1; }
+.work-card h3 { font-size: 1.08rem; line-height: 1.3; color: var(--heading); }
+.work-card p { font-size: 0.93rem; line-height: 1.65; color: var(--text-muted); flex: 1; }
 .work-go {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.86rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--accent);
     transition: gap 0.2s ease;
@@ -1446,17 +1449,19 @@ body { font-size: 18.5px; line-height: 1.72; }
 @media (max-width: 600px) { .work-grid { grid-template-columns: 1fr; } }
 
 /* ════════ TYPOGRAPHY ROLES (append-only — must stay last) ════════ */
-/* Archivo carries every heading and every piece of UI chrome; Source Serif 4
-   carries anything that gets read in sentences; IBM Plex Mono carries dates,
-   tool lists and instrument labels. Weights are explicit because only 500/600/700
-   are loaded — leaving them at the browser default would synthesise a fake face. */
+/* Jost carries every heading and all UI chrome; Source Serif 4 carries anything
+   read in sentences; IBM Plex Mono carries dates, tool lists and labels.
+   Weights are explicit — only 300/400/500/600 are loaded, so leaving them at a
+   browser default risks a synthesised face. Geometric sans needs looser
+   tracking at small sizes and tighter tracking at display sizes; that split is
+   why the numbers below differ per role. */
 
 .hero h1,
-.project-hero h1 { font-family: var(--serif); font-weight: 700; letter-spacing: -0.03em; }
+.project-hero h1 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.025em; }
 
-.section-title   { font-family: var(--serif); font-weight: 700; letter-spacing: -0.022em; }
+.section-title   { font-family: var(--serif); font-weight: 500; letter-spacing: -0.012em; }
 
-.sidebar-name    { font-family: var(--serif); font-weight: 600; letter-spacing: -0.012em; }
+.sidebar-name    { font-family: var(--serif); font-weight: 500; letter-spacing: 0.002em; }
 
 .exp-role,
 .edu-school,
@@ -1464,7 +1469,7 @@ body { font-size: 18.5px; line-height: 1.72; }
 .thesis-title,
 .award-title,
 .skill-group h4,
-.work-card h3    { font-family: var(--serif); font-weight: 600; letter-spacing: -0.012em; }
+.work-card h3    { font-family: var(--serif); font-weight: 500; letter-spacing: -0.004em; }
 
 .sidebar-title,
 .sidebar-nav a,
@@ -1478,7 +1483,12 @@ body { font-size: 18.5px; line-height: 1.72; }
 .thesis-degree,
 .breadcrumb,
 .work-go,
-.footer          { font-family: var(--serif); font-weight: 500; }
+.footer          { font-family: var(--serif); font-weight: 400; letter-spacing: 0.012em; }
+
+.sidebar-nav a,
+.sidebar-resume,
+.contact-label,
+.work-go         { font-weight: 500; }
 
 .news-date,
 .exp-date,
@@ -1486,3 +1496,38 @@ body { font-size: 18.5px; line-height: 1.72; }
 .award-date,
 .fn-caption-meta,
 .work-tools      { font-family: var(--mono); }
+
+/* ════════ FONT SWAP ════════ */
+/* Jost stands in for a licensed face. Both of the faces you named are
+   commercial and cannot be served from a free CDN:
+     · Metromedium #2 — Linotype/Monotype. The modern cut is Metro Nova
+       (Toshi Omagari, 2012), 7 weights + 6 condensed. Buy a WEBFONT licence,
+       not desktop.
+     · Gulams Condensed — Luminatype Studio, ~$9/style on MyFonts. The
+       "free download" copies floating around are personal-use only; a public
+       portfolio is commercial use.
+   Once you own a webfont kit, drop the files in assets/fonts/, uncomment the
+   block below, and change --serif to match. Nothing else has to move. */
+
+/*
+@font-face {
+    font-family: 'Metro Nova';
+    src: url('../fonts/metronova-medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Metro Nova';
+    src: url('../fonts/metronova-semibold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+:root { --serif: 'Metro Nova', 'Jost', sans-serif; }
+*/
+
+/* Prefer the condensed direction instead? This one line gets you there with a
+   free face in the same spirit as Gulams Condensed — delete it to go back:
+   :root { --serif: 'Archivo Narrow', 'Jost', sans-serif; }
+   ...and add &family=Archivo+Narrow:wght@500;600;700 to the font link. */
