@@ -17,7 +17,8 @@
  *   3. the theme toggle now calls window.refreshFluidColors()
  *   4. <script src="assets/js/fluid-cursor.js" defer></script> before </body>
  *      (../assets/js/... on the project pages)
- *   5. style.css defines .fluid-bg, .fluid-tag, --fluid-cold, --fluid-hot
+ *   5. style.css defines .fluid-bg and .fluid-tag (the colour ramp lives in
+ *      the display shader below, not in CSS)
  *
  * Tuning: everything worth changing is in CONFIG below. Start with
  * INTENSITY_DARK / INTENSITY_LIGHT (how visible) and CURL (how smoky).
@@ -29,28 +30,39 @@
   var canvas = document.getElementById('fluid');
   if (!canvas) return;
 
-  // Respect motion preferences; skip touch devices entirely (no cursor, and
-  // it costs battery on phones).
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      matchMedia('(pointer: coarse)').matches) {
+  // Only opt-out is an explicit reduced-motion preference. Touch devices get
+  // the full simulation — fingers drive it the same way a cursor does.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     canvas.style.display = 'none';
     return;
   }
 
+  // Phones and tablets run a smaller grid at lower pixel density.
+  var IS_MOBILE = matchMedia('(pointer: coarse)').matches || innerWidth < 720;
+
   var CONFIG = {
-    SIM_RESOLUTION:       128,   // velocity grid (128 is plenty)
-    DYE_RESOLUTION:       640,   // visible dye grid
-    DENSITY_DISSIPATION:  1.7,   // higher = dye clears faster
-    VELOCITY_DISSIPATION: 2.4,
+    SIM_RESOLUTION:       IS_MOBILE ? 96 : 128,   // velocity grid
+    DYE_RESOLUTION:       IS_MOBILE ? 384 : 640,  // visible dye grid
+    DPR_CAP:              IS_MOBILE ? 1.0 : 1.5,
+    PRESSURE_ITERATIONS:  IS_MOBILE ? 12 : 16,
+
+    DENSITY_DISSIPATION:  1.15,  // lower = dye lingers (was 1.7, read as faint)
+    VELOCITY_DISSIPATION: 1.8,
     PRESSURE:             0.8,
-    PRESSURE_ITERATIONS:  16,
-    CURL:                 24,    // vorticity confinement — the "smoke curl"
-    SPLAT_RADIUS:         0.0022,
-    SPLAT_FORCE:          5200,
-    DYE_AMOUNT:           0.9,
-    INTENSITY_DARK:       0.55,  // global alpha of the dye, dark theme
-    INTENSITY_LIGHT:      0.30,  // lighter — dark dye on pale paper reads heavy
-    IDLE_SLEEP_MS:        6000   // stop the RAF loop after this much stillness
+    CURL:                 30,    // vorticity confinement — the "smoke curl"
+
+    SPLAT_RADIUS:         0.0026,
+    SPLAT_FORCE:          5600,
+    DYE_AMOUNT:           1.0,
+
+    // Always-on ambient circulation, so the field is alive before anyone
+    // touches it. Set AMBIENT_DYE to 0 for a cursor-only background.
+    AMBIENT_EMITTERS:     IS_MOBILE ? 2 : 3,
+    AMBIENT_DYE:          0.62,  // dye injected per second, per emitter
+    AMBIENT_FORCE:        13000,
+
+    INTENSITY_DARK:       0.88,  // global alpha of the dye, dark theme
+    INTENSITY_LIGHT:      0.78   // light theme needs nearly as much to register
   };
 
   /* ── WebGL context ───────────────────────────────────────────────────── */
@@ -317,14 +329,29 @@
   // Display: dye magnitude → a cool→warm ramp, i.e. the same diverging
   // colormap convention every CFD contour plot uses. Alpha keeps the page
   // background showing through so text contrast never drops.
+  // Dye magnitude -> a five-stop diverging ramp: deep blue, blue, teal, amber,
+  // vermilion. Same convention as a CFD contour plot, and it carries far more
+  // chroma than a straight two-colour mix.
   var displayShader = compileShader(gl.FRAGMENT_SHADER, [
     'precision highp float; precision highp sampler2D;',
     'varying vec2 vUv; uniform sampler2D uTexture;',
-    'uniform vec3 uCold; uniform vec3 uHot; uniform float uIntensity;',
+    'uniform float uIntensity; uniform float uDeepen;',
+    'vec3 ramp (float t) {',
+    '  vec3 c0 = vec3(0.071, 0.227, 0.478);',
+    '  vec3 c1 = vec3(0.114, 0.498, 0.769);',
+    '  vec3 c2 = vec3(0.180, 0.796, 0.753);',
+    '  vec3 c3 = vec3(0.965, 0.769, 0.271);',
+    '  vec3 c4 = vec3(0.937, 0.357, 0.169);',
+    '  if (t < 0.30) return mix(c0, c1, t / 0.30);',
+    '  if (t < 0.55) return mix(c1, c2, (t - 0.30) / 0.25);',
+    '  if (t < 0.78) return mix(c2, c3, (t - 0.55) / 0.23);',
+    '  return mix(c3, c4, clamp((t - 0.78) / 0.22, 0.0, 1.0));',
+    '}',
     'void main () {',
     '  float d = clamp(texture2D(uTexture, vUv).r, 0.0, 1.0);',
-    '  float a = smoothstep(0.02, 0.85, d);',
-    '  vec3 col = mix(uCold, uHot, smoothstep(0.25, 0.95, d));',
+    '  float a = pow(smoothstep(0.012, 0.55, d), 0.85);',
+    '  vec3 col = ramp(smoothstep(0.02, 0.9, d));',
+    '  col = mix(col, col * 0.78, uDeepen);',   // light theme: deepen on paper
     '  gl_FragColor = vec4(col, a * uIntensity);',
     '}'
   ].join('\n'));
@@ -449,7 +476,7 @@
   }
 
   function resizeCanvas() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 1.5); // 1.5 is plenty; 2 doubles cost
+    var dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
     var w = Math.floor(canvas.clientWidth * dpr);
     var h = Math.floor(canvas.clientHeight * dpr);
     if (canvas.width !== w || canvas.height !== h) {
@@ -461,29 +488,18 @@
 
   /* ── colours, driven by the site's CSS variables ─────────────────────── */
 
-  var cold = [0.31, 0.42, 0.53], hot = [0.85, 0.44, 0.24], intensity = CONFIG.INTENSITY_DARK;
-
-  function hexToRgb(hex, fallback) {
-    var m = String(hex || '').trim().replace('#', '');
-    if (m.length === 3) m = m[0] + m[0] + m[1] + m[1] + m[2] + m[2];
-    if (!/^[0-9a-f]{6}$/i.test(m)) return fallback;
-    var n = parseInt(m, 16);
-    return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-  }
+  var intensity = CONFIG.INTENSITY_DARK, deepen = 0.0;
 
   function refreshColors() {
-    var cs = getComputedStyle(document.documentElement);
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    cold = hexToRgb(cs.getPropertyValue('--fluid-cold'), isDark ? [0.31, 0.66, 0.78] : [0.12, 0.42, 0.53]);
-    hot  = hexToRgb(cs.getPropertyValue('--fluid-hot'),  isDark ? [0.85, 0.44, 0.24] : [0.76, 0.35, 0.16]);
     intensity = isDark ? CONFIG.INTENSITY_DARK : CONFIG.INTENSITY_LIGHT;
+    deepen = isDark ? 0.0 : 1.0;   // darken the ramp so it bites on pale paper
   }
   window.refreshFluidColors = refreshColors;
 
   /* ── simulation ──────────────────────────────────────────────────────── */
 
   var lastTime = Date.now();
-  var lastInputTime = 0;
   var running = false;
   var rafId = null;
 
@@ -585,85 +601,150 @@
 
     displayProgram.bind();
     gl.uniform1i(displayProgram.uniforms.uTexture, dye.read.attach(0));
-    gl.uniform3f(displayProgram.uniforms.uCold, cold[0], cold[1], cold[2]);
-    gl.uniform3f(displayProgram.uniforms.uHot, hot[0], hot[1], hot[2]);
     gl.uniform1f(displayProgram.uniforms.uIntensity, intensity);
+    gl.uniform1f(displayProgram.uniforms.uDeepen, deepen);
     blit(null);
     gl.disable(gl.BLEND);
   }
+
+  /* ── ambient circulation ─────────────────────────────────────────────
+     Three emitters drift along slow, mutually incommensurate Lissajous paths
+     and inject dye along their own velocity. Nothing repeats on a loop you
+     can spot, and the field is already moving when the page loads.        */
+
+  var emitters = [];
+  var ambientT = Math.random() * 1000;
+
+  function initEmitters() {
+    emitters = [];
+    for (var i = 0; i < CONFIG.AMBIENT_EMITTERS; i++) {
+      emitters.push({
+        ax: 0.30 + 0.09 * i,          // path half-width
+        ay: 0.26 + 0.07 * ((i + 1) % 3),
+        fx: 0.031 + 0.0143 * i,       // irrational-ish frequency ratios
+        fy: 0.023 + 0.0197 * i,
+        px: Math.random() * 6.283,
+        py: Math.random() * 6.283,
+        x: 0, y: 0, seeded: false
+      });
+    }
+  }
+
+  function ambient(dt) {
+    if (CONFIG.AMBIENT_DYE <= 0) return;
+    ambientT += dt;
+    for (var i = 0; i < emitters.length; i++) {
+      var e = emitters[i];
+      var nx = 0.5 + e.ax * Math.sin(ambientT * e.fx * 6.283 + e.px) *
+                          Math.cos(ambientT * 0.11 + e.py);
+      var ny = 0.5 + e.ay * Math.cos(ambientT * e.fy * 6.283 + e.py) *
+                          Math.sin(ambientT * 0.09 + e.px);
+      if (!e.seeded) { e.x = nx; e.y = ny; e.seeded = true; continue; }
+      var dx = nx - e.x, dy = ny - e.y;
+      e.x = nx; e.y = ny;
+      splat(nx, ny, dx * CONFIG.AMBIENT_FORCE, dy * CONFIG.AMBIENT_FORCE,
+            CONFIG.AMBIENT_DYE * dt);
+    }
+  }
+
+  /* ── main loop ───────────────────────────────────────────────────────── */
 
   function frame() {
     var now = Date.now();
     var dt = Math.min((now - lastTime) / 1000, 0.0166);
     lastTime = now;
 
-    if (resizeCanvas()) initFramebuffers();
+    if (resizeCanvas()) { initFramebuffers(); }
+    ambient(dt);
     step(dt);
     render();
 
-    // Idle: once the dye has dissipated, stop burning frames.
-    if (now - lastInputTime > CONFIG.IDLE_SLEEP_MS) {
-      running = false;
-      rafId = null;
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      return;
-    }
     rafId = requestAnimationFrame(frame);
   }
 
-  function wake() {
-    lastInputTime = Date.now();
-    if (!running && !document.hidden) {
-      running = true;
-      lastTime = Date.now();
-      rafId = requestAnimationFrame(frame);
-    }
+  function start() {
+    if (running || document.hidden) return;
+    running = true;
+    lastTime = Date.now();
+    rafId = requestAnimationFrame(frame);
   }
 
-  /* ── pointer input ───────────────────────────────────────────────────── */
+  function stop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    running = false;
+  }
+
+  /* ── input: mouse, pen and touch all drive the same splats ───────────── */
+
+  function push(x, y, dx, dy, scale) {
+    var mag = Math.sqrt(dx * dx + dy * dy);
+    if (mag < 0.0006) return;
+    var speed = Math.min(mag / 0.06, 1.0);
+    splat(x, y, dx * CONFIG.SPLAT_FORCE, dy * CONFIG.SPLAT_FORCE,
+          CONFIG.DYE_AMOUNT * (0.4 + 0.6 * speed) * (scale || 1));
+  }
+
+  function burst(x, y, force, amount) {
+    for (var i = 0; i < 5; i++) {
+      var a = (i / 5) * 6.283 + Math.random();
+      splat(x, y, Math.cos(a) * force, Math.sin(a) * force, amount);
+    }
+  }
 
   var prevX = null, prevY = null;
 
   window.addEventListener('pointermove', function (e) {
-    if (e.pointerType === 'touch') return;
+    if (e.pointerType === 'touch') return;          // touch handled below
     var x = e.clientX / window.innerWidth;
     var y = 1.0 - e.clientY / window.innerHeight;
-
-    if (prevX === null) { prevX = x; prevY = y; wake(); return; }
-
-    var dx = (x - prevX) * CONFIG.SPLAT_FORCE;
-    var dy = (y - prevY) * CONFIG.SPLAT_FORCE;
+    if (prevX === null) { prevX = x; prevY = y; return; }
+    push(x, y, x - prevX, y - prevY);
     prevX = x; prevY = y;
-
-    var speed = Math.min(Math.sqrt(dx * dx + dy * dy) / CONFIG.SPLAT_FORCE, 0.08) / 0.08;
-    if (speed < 0.01) return;
-
-    wake();
-    splat(x, y, dx, dy, CONFIG.DYE_AMOUNT * (0.35 + 0.65 * speed));
   }, { passive: true });
 
-  // A brief pulse on click gives the interaction a payoff.
   window.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'touch') return;
-    var x = e.clientX / window.innerWidth;
-    var y = 1.0 - e.clientY / window.innerHeight;
-    wake();
-    for (var i = 0; i < 4; i++) {
-      var a = (i / 4) * Math.PI * 2;
-      splat(x, y, Math.cos(a) * 900, Math.sin(a) * 900, CONFIG.DYE_AMOUNT * 0.8);
+    burst(e.clientX / window.innerWidth,
+          1.0 - e.clientY / window.innerHeight, 1100, CONFIG.DYE_AMOUNT * 0.9);
+  }, { passive: true });
+
+  // Touch: every finger is its own stirring rod. Listeners are passive, so
+  // scrolling is never blocked — the flow just reacts as the page moves.
+  var touches = {};
+
+  function touchXY(t) {
+    return { x: t.clientX / window.innerWidth,
+             y: 1.0 - t.clientY / window.innerHeight };
+  }
+
+  window.addEventListener('touchstart', function (e) {
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var t = e.changedTouches[i], p = touchXY(t);
+      touches[t.identifier] = p;
+      burst(p.x, p.y, 900, CONFIG.DYE_AMOUNT * 0.8);
     }
   }, { passive: true });
 
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden && rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
-      running = false;
-    } else if (!document.hidden) {
-      prevX = prevY = null;
+  window.addEventListener('touchmove', function (e) {
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var t = e.changedTouches[i], p = touchXY(t), prev = touches[t.identifier];
+      if (prev) push(p.x, p.y, p.x - prev.x, p.y - prev.y, 1.15);
+      touches[t.identifier] = p;
     }
+  }, { passive: true });
+
+  function endTouch(e) {
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      delete touches[e.changedTouches[i].identifier];
+    }
+  }
+  window.addEventListener('touchend', endTouch, { passive: true });
+  window.addEventListener('touchcancel', endTouch, { passive: true });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { stop(); }
+    else { prevX = prevY = null; touches = {}; start(); }
   });
 
   var resizeTimer;
@@ -679,5 +760,9 @@
   refreshColors();
   resizeCanvas();
   initFramebuffers();
-  render();
+  initEmitters();
+  for (var i = 0; i < 6; i++) {
+    burst(0.15 + Math.random() * 0.7, 0.15 + Math.random() * 0.7, 700, 0.55);
+  }
+  start();
 })();
