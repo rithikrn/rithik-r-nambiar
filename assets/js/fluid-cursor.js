@@ -63,7 +63,7 @@
 
     INTENSITY_DARK:       0.60,  // dark theme: sits well behind the text
     INTENSITY_LIGHT:      0.55,  // pale paper swallows more, so it gets more
-    SATURATION_DARK:      0.70,  // pull chroma out on dark — reads as smoke
+    SATURATION_DARK:      0.60,  // pull chroma out on dark — reads as smoke
     SATURATION_LIGHT:     0.85
   };
 
