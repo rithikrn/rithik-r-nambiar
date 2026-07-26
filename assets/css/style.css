@@ -1,19 +1,22 @@
 :root {
     --sidebar-w: 280px;
-    --bg: #F3EFE8;
-    --bg-warm: #EDE8DF;
-    --sidebar-bg: #1C1C1A;
-    --sidebar-text: #A8A8A0;
-    --sidebar-accent: #EBE6DC;
-    --text: #2E2E2C;
-    --text-muted: #6B6860;
-    --heading: #1A1A18;
-    --accent: #B85C38;
-    --accent-light: #F2E7DD;
-    --border: #DDD8CE;
-    --card-bg: #FAF8F4;
-    --tag-bg: #EBE7DF;
-    --link: #B85C38;
+    --bg: #F4F6F5;
+    --bg-warm: #EAEEEE;
+    --sidebar-bg: #0D141A;
+    --sidebar-text: #93A3B2;
+    --sidebar-accent: #E7EEF4;
+    --text: #1B2530;
+    --text-muted: #5A6874;
+    --heading: #0D1720;
+    --accent: #1F6B87;
+    --accent-warm: #C15A2A;
+    --accent-light: #E4EDF1;
+    --border: #DBE1E4;
+    --card-bg: #FFFFFF;
+    --tag-bg: #E8EDEF;
+    --link: #1F6B87;
+    --fluid-cold: #1F6B87;
+    --fluid-hot: #C15A2A;
     --serif: 'DM Serif Display', Georgia, serif;
     --sans: 'Source Sans 3', -apple-system, sans-serif;
     --mono: 'JetBrains Mono', monospace;
@@ -620,7 +623,7 @@ section:last-child { margin-bottom: 2rem; }
 .overlay.open { display: block; }
 
 @media (max-width: 860px) {
-    :root:not([data-theme="dark"]) { --text: #111111; --text-muted: #333333; --heading: #000000; --link: #8F3F22; }
+    :root:not([data-theme="dark"]) { --text: #0E1720; --text-muted: #2E3B47; --heading: #050B11; --link: #17566E; }
     .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
     .sidebar.open { transform: translateX(0); }
     .mobile-header { display: flex; }
@@ -1318,20 +1321,23 @@ section:last-child { margin-bottom: 2rem; }
 
 /* ════════ DARK THEME ════════ */
 :root[data-theme="dark"] {
-    --bg: #15140F;
-    --bg-warm: #1D1B16;
-    --sidebar-bg: #0E0D0B;
-    --sidebar-text: #9A968C;
-    --sidebar-accent: #EDE8DC;
-    --text: #DAD5C8;
-    --text-muted: #989384;
-    --heading: #F2EEE4;
-    --accent: #D67E54;
-    --accent-light: #2A2018;
-    --border: #332F27;
-    --card-bg: #1C1A15;
-    --tag-bg: #242019;
-    --link: #E89066;
+    --bg: #0A0F14;
+    --bg-warm: #111820;
+    --sidebar-bg: #070B0F;
+    --sidebar-text: #93A3B2;
+    --sidebar-accent: #E7EEF4;
+    --text: #D6E0E8;
+    --text-muted: #8B9AA8;
+    --heading: #EDF3F8;
+    --accent: #4FA8C7;
+    --accent-warm: #D9713C;
+    --accent-light: #12222B;
+    --border: #1D2731;
+    --card-bg: #111820;
+    --tag-bg: #16202A;
+    --link: #6FBFDB;
+    --fluid-cold: #4FA8C7;
+    --fluid-hot: #D9713C;
 }
 :root[data-theme="dark"] .img-carousel-hint { background: rgba(20,19,15,0.8); }
 
@@ -1357,14 +1363,38 @@ section:last-child { margin-bottom: 2rem; }
 :root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 @media (max-width: 860px) { .theme-toggle { top: 9px; right: 12px; width: 38px; height: 38px; } }
 
-/* ════════ AMBIENT FLOW FIELD ════════ */
-.flow-field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+/* ════════ INTERACTIVE FLUID BACKGROUND ════════ */
+/* Canvas sits behind everything and never eats pointer events. The mask thins
+   the dye across the reading column so body-text contrast can't drop. */
+.fluid-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(115% 95% at 50% 8%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 45%, #000 100%);
+            mask-image: radial-gradient(115% 95% at 50% 8%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 45%, #000 100%);
+}
 .main { position: relative; z-index: 1; }
 
-/* ════════ SOFTER LIGHT BACKGROUND (append-only) ════════ */
-/* Warmer, calmer page tone so the flow field reads and it's gentler on the eyes.
-   Dark mode is unaffected — its [data-theme="dark"] rule has higher specificity. */
-:root { --bg: #E8DFCD; }
+/* Caption that turns the background into a claim rather than decoration. */
+.fluid-tag {
+    position: fixed;
+    right: 1rem;
+    bottom: 0.85rem;
+    z-index: 2;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+@media (max-width: 860px) { .fluid-tag { display: none; } }
+@media (prefers-reduced-motion: reduce) { .fluid-tag { display: none; } }
 
 /* ════════ HERO TYPEWRITER ════════ */
 /* Terminal-style rotating subtitle. Pairs with the JetBrains Mono you already load.
@@ -1394,3 +1424,14 @@ section:last-child { margin-bottom: 2rem; }
 
 /* Respect reduced-motion: freeze the caret (the JS also skips typing) */
 @media (prefers-reduced-motion: reduce) { .type-caret { animation: none; } }
+
+/* ════════ WARM ACCENT (append-only — must stay last) ════════ */
+/* The hot end of the colormap appears in exactly two places: the typing caret
+   and skill-tag hover. Everything else stays cool. */
+.type-caret { background: var(--accent-warm); }
+.skill-tag:hover {
+    border-color: var(--accent-warm);
+    color: var(--accent-warm);
+    background: rgba(193, 90, 42, 0.07);
+}
+:root[data-theme="dark"] .skill-tag:hover { background: rgba(217, 113, 60, 0.13); }
