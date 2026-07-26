@@ -7,7 +7,7 @@
     <meta name="description" content="Research in wind energy — offshore floating wind turbine modeling and VAWT performance optimization.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script>
     (function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
@@ -15,8 +15,8 @@
 </head>
 <body>
 
-<!-- Ambient flow field background -->
-<canvas id="flowField" class="flow-field" aria-hidden="true"></canvas>
+<!-- Interactive fluid background (GPU Navier-Stokes) -->
+<canvas id="fluid" class="fluid-bg" aria-hidden="true"></canvas>
 
 <!-- Theme toggle -->
 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
@@ -146,77 +146,16 @@ function toggleCarousel(el) {
     if(animate){ root.classList.add('theme-transition'); setTimeout(() => root.classList.remove('theme-transition'), 420); }
     theme === 'dark' ? root.setAttribute('data-theme','dark') : root.removeAttribute('data-theme');
     try { localStorage.setItem('theme', theme); } catch(e){}
-    if(typeof refreshFlowColor === 'function') refreshFlowColor();
+    if(typeof window.refreshFluidColors === 'function') window.refreshFluidColors();
   }
   btn && btn.addEventListener('click', () => {
     apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
   });
 })();
 
-/* ─── Ambient flow field (airflow / streamlines) ─── */
-(function(){
-  const canvas = document.getElementById('flowField');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let w, h, dpr, particles = [], raf, t = 0;
-  let strokeRGBA, fadeRGBA, clearOnce = true;
-
-  // ── tuning knobs ──
-  const SPEED = 1.2, COUNT_DESKTOP = 70, COUNT_MOBILE = 34, LIFE = 280;
-
-  function hexA(hex, a){
-    const m = (hex || '').replace('#','').match(/^([0-9a-f]{6})$/i);
-    let r = 184, g = 92, b = 56;
-    if(m){ const n = parseInt(m[1], 16); r = (n >> 16) & 255; g = (n >> 8) & 255; b = n & 255; }
-    return `rgba(${r},${g},${b},${a})`;
-  }
-  function readColors(){
-    const cs = getComputedStyle(document.documentElement);
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    strokeRGBA = hexA(cs.getPropertyValue('--accent').trim(), dark ? 0.22 : 0.15);
-    fadeRGBA   = hexA(cs.getPropertyValue('--bg').trim(), 0.055);
-    clearOnce  = true;
-  }
-  window.refreshFlowColor = readColors;
-
-  function resize(){
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    w = canvas.width  = innerWidth  * dpr;
-    h = canvas.height = innerHeight * dpr;
-    canvas.style.width  = innerWidth  + 'px';
-    canvas.style.height = innerHeight + 'px';
-    const count = innerWidth < 720 ? COUNT_MOBILE : COUNT_DESKTOP;
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * w, y: Math.random() * h, life: Math.random() * LIFE
-    }));
-    clearOnce = true;
-  }
-  function step(){
-    if(clearOnce){ ctx.clearRect(0, 0, w, h); clearOnce = false; }
-    ctx.fillStyle = fadeRGBA; ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = strokeRGBA; ctx.lineWidth = 1.1 * dpr; ctx.lineCap = 'round';
-    t += 0.0015;
-    for(const p of particles){
-      const a = (Math.sin(p.x * 0.0015 + t) + Math.cos(p.y * 0.0015 - t * 0.8)) * Math.PI;
-      const nx = p.x + Math.cos(a) * SPEED * dpr;
-      const ny = p.y + Math.sin(a) * SPEED * dpr;
-      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
-      p.x = nx; p.y = ny; p.life--;
-      if(p.life < 0 || nx < 0 || nx > w || ny < 0 || ny > h){
-        p.x = Math.random() * w; p.y = Math.random() * h; p.life = LIFE;
-      }
-    }
-    raf = requestAnimationFrame(step);
-  }
-  readColors(); resize();
-  if(!reduce) raf = requestAnimationFrame(step);
-  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 200); }, { passive: true });
-  document.addEventListener('visibilitychange', () => {
-    if(document.hidden) cancelAnimationFrame(raf);
-    else if(!reduce){ clearOnce = true; raf = requestAnimationFrame(step); }
-  });
-})();
 </script>
+
+<!-- Interactive fluid background -->
+<script src="../assets/js/fluid-cursor.js" defer></script>
 </body>
 </html>
