@@ -761,21 +761,26 @@
     }, 200);
   }, { passive: true });
 
-  /* ── boot ────────────────────────────────────────────────────────────── */
+/* ── boot ────────────────────────────────────────────────────────────── */
 
-  // The caption belongs to the hero, not to the whole page — once the reader
-  // scrolls it gets out of the way instead of sitting on top of the content.
+  // The caption is the page's sign-off, not its headline: it stays out of the
+  // way while reading and fades in only once the reader reaches the bottom.
   var tag = document.querySelector('.fluid-tag');
   if (tag) {
-    var tagHidden = false;
+    var tagShown = false;
     var onScroll = function () {
-      var past = (window.pageYOffset || document.documentElement.scrollTop) > 90;
-      if (past !== tagHidden) {
-        tagHidden = past;
-        tag.classList.toggle('is-hidden', past);
+      var doc = document.documentElement;
+      var scrolled = window.pageYOffset || doc.scrollTop;
+      var remaining = doc.scrollHeight - (scrolled + window.innerHeight);
+      var atBottom = remaining < 140;          // ~one footer's worth of runway
+      if (atBottom !== tagShown) {
+        tagShown = atBottom;
+        tag.classList.toggle('is-visible', atBottom);
       }
     };
+    // Lazy-loaded images change scrollHeight, so re-measure on resize too.
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     onScroll();
   }
 
