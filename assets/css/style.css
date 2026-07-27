@@ -1304,15 +1304,19 @@ section:last-child { margin-bottom: 2rem; }
     font-size: 0.68rem;
     letter-spacing: 0.03em;
     color: var(--text-muted);
-    opacity: 0.55;
+    opacity: 0;                     /* hidden until the reader hits the bottom */
+    transform: translateY(6px);
     pointer-events: none;
     user-select: none;
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition: opacity 0.4s ease, transform 0.4s ease;
     -webkit-user-select: none;
 }
-.fluid-tag.is-hidden { opacity: 0; transform: translateY(6px); }
+.fluid-tag.is-visible { opacity: 0.55; transform: none; }
 
-@media (max-width: 860px) { .fluid-tag { right: 0.75rem; bottom: 0.6rem; font-size: 0.6rem; opacity: 0.45; } }
+@media (max-width: 860px) {
+    .fluid-tag { right: 0.75rem; bottom: 0.6rem; font-size: 0.6rem; }
+    .fluid-tag.is-visible { opacity: 0.45; }
+}
 @media (prefers-reduced-motion: reduce) { .fluid-tag { display: none; } }
 
 /* ════════ HERO TYPEWRITER ════════ */
